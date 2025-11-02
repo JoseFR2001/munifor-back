@@ -14,10 +14,14 @@ const ReportSchema = new Schema(
       lat: { type: Number, required: true },
       lng: { type: Number, required: true },
     },
-    type_report: {
+    report_type: {
       type: String,
       enum: ["Bache", "Alumbrado", "Basura", "Incidente", "Otro"],
       default: "Incidente",
+    },
+    other_type_detail: {
+      type: String,
+      default: null,
     },
     deleted_at: { type: Date, default: null },
   },

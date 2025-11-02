@@ -44,16 +44,7 @@ export const login = async (req, res) => {
 
     const token = generateToken({ _id: user._id, role: user.role });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: parseInt(process.env.EXPIRES) * 1000,
-    });
-
-    return res.status(200).json({
-      ok: true,
-      msg: "Inicio de sesión exitoso",
-      user,
-    });
+    return res.json({ ok: true, message: "Login exitoso", token });
   } catch (error) {
     return res.status(500).json({
       ok: false,
