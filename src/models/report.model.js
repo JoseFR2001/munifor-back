@@ -1,0 +1,36 @@
+import { model, Schema, Types } from "mongoose";
+
+const ReportSchema = new Schema(
+  {
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["Pendiente", "Revisado", "Aceptado", "Completado", "Rechazado"],
+      default: "Pendiente",
+    },
+    author: { type: Types.ObjectId, ref: "User", required: true },
+    location: {
+      lat: { type: Number, required: true },
+      lng: { type: Number, required: true },
+    },
+    type_report: {
+      type: String,
+      enum: ["Bache", "Alumbrado", "Basura", "Incidente", "Otro"],
+      default: "Incidente",
+    },
+    deleted_at: { type: Date, default: null },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+    timestamps: {
+      createdAt: "created_at",
+      updatedAt: "updated_at",
+    },
+    versionKey: false,
+  }
+);
+
+const ReportModel = model("Report", ReportSchema);
+export default ReportModel;
