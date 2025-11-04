@@ -9,7 +9,7 @@ const ReportSchema = new Schema(
       enum: ["Pendiente", "Revisado", "Aceptado", "Completado", "Rechazado"],
       default: "Pendiente",
     },
-    author: { type: Types.ObjectId, ref: "User", required: true },
+    author: { type: Types.ObjectId, ref: "User" },
     location: {
       lat: { type: Number, required: true },
       lng: { type: Number, required: true },

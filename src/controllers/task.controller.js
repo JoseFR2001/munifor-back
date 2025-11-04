@@ -43,6 +43,24 @@ export const getTaskById = async (req, res) => {
     });
   }
 };
+
+export const getTaskWorker = async (req, res) => {
+  const { crewId } = req.params;
+  // ! Debo modificar esto para que tome el id del user logueado
+  try {
+    const tasks = await TaskModel.find({ crew: crewId });
+    return res.status(200).json({
+      ok: true,
+      tasks,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
 export const updateTask = async (req, res) => {
   const { id } = req.params;
   try {
