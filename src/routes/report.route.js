@@ -23,7 +23,7 @@ reportRouter.post("/report", createReport);
 reportRouter.get("/reports", getAllReports);
 reportRouter.get("/reports/pending", getReportsPending);
 reportRouter.get("/reports/accepted", getReportsAccepted);
-reportRouter.get("/reports/author/:id", getAllReportsForAuthor);
+reportRouter.get("/reports/author", getAllReportsForAuthor);
 reportRouter.get("/report/:id", getReportById);
 
 // * Ruta para actualizar el estado de un reporte

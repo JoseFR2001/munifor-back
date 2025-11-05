@@ -6,7 +6,7 @@ const ProgressReportSchema = new Schema(
     description: { type: String, required: true },
     worker: { type: Types.ObjectId, ref: "User", required: true },
     crew: { type: Types.ObjectId, ref: "Crew", required: true },
-    images: [{ type: String }],
+    task: { type: Types.ObjectId, ref: "Task", required: true },
     status: {
       type: String,
       enum: ["Pendiente", "En Progreso", "Finalizado"],

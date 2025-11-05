@@ -3,13 +3,61 @@ import { generateToken } from "../helpers/jwt.helper.js";
 import UserModel from "../models/user.model.js";
 
 export const register = async (req, res) => {
-  const { password } = req.body;
+  const { password, role } = req.body;
   try {
     const hashedPassword = await hashPassword(password);
-    const newUser = await UserModel.create({
-      ...req.body,
-      password: hashedPassword,
-    });
+
+    let userData;
+    if (role == "Ciudadano") {
+      userData = {
+        ...req.body,
+        password: hashedPassword,
+        role_data: {
+          is_banned: false,
+          count_banned: 0,
+          banned_at: null,
+          banned_off: null,
+        },
+      };
+    } else if (role == "Operador") {
+      userData = {
+        ...req.body,
+        password: hashedPassword,
+        role_data: {
+          is_approved: false,
+          approved_at: null,
+          rejected_at: null,
+          rejection_reason: null,
+        },
+      };
+    } else if (role == "Trabajador") {
+      userData = {
+        ...req.body,
+        password: hashedPassword,
+        role_data: {
+          is_approved: false,
+          approved_at: null,
+          rejected_at: null,
+          rejection_reason: null,
+          is_available: true,
+          is_leader: false,
+          leader_at: null,
+        },
+      };
+    } else if (role == "Administrador") {
+      userData = {
+        ...req.body,
+        password: hashedPassword,
+        role_data: {},
+      };
+    } else {
+      return res.status(400).json({
+        ok: false,
+        msg: "Rol inválido",
+      });
+    }
+
+    const newUser = await UserModel.create(userData);
 
     return res.status(201).json({
       ok: true,

@@ -18,6 +18,8 @@ const TaskSchema = new Schema(
     deleted_at: { type: Date, default: null },
   },
   {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     timestamps: {
       createdAt: "created_at",
       updatedAt: "updated_at",
@@ -25,6 +27,12 @@ const TaskSchema = new Schema(
     versionKey: false,
   }
 );
+
+TaskSchema.virtual("progress_reports", {
+  ref: "ProgressReport",
+  localField: "_id",
+  foreignField: "task",
+});
 
 const TaskModel = model("Task", TaskSchema);
 export default TaskModel;

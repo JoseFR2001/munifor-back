@@ -36,5 +36,11 @@ const ReportSchema = new Schema(
   }
 );
 
+ReportSchema.virtual("tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "report",
+});
+
 const ReportModel = model("Report", ReportSchema);
 export default ReportModel;

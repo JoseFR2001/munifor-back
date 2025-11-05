@@ -21,6 +21,11 @@ const UserSchema = new Schema(
       enum: ["Ciudadano", "Operador", "Trabajador", "Administrador"],
       default: "Ciudadano",
     },
+    // Campos específicos según el rol
+    role_data: {
+      type: Schema.Types.Mixed,
+      default: {},
+    },
     profile: {
       first_name: {
         type: String,
@@ -46,7 +51,18 @@ const UserSchema = new Schema(
         default: "Otro",
       },
     },
+
     deleted_at: {
+      type: Date,
+      default: null,
+    },
+    // Token para recuperación de contraseña
+    password_reset_token: {
+      type: String,
+      default: null,
+    },
+    // Fecha de expiración del token de recuperación
+    password_reset_expires: {
       type: Date,
       default: null,
     },
@@ -61,5 +77,30 @@ const UserSchema = new Schema(
     versionKey: false,
   }
 );
+
+UserSchema.virtual("reports", {
+  ref: "Report",
+  localField: "_id",
+  foreignField: "author",
+});
+
+UserSchema.virtual("progress_reports", {
+  ref: "ProgressReport",
+  localField: "_id",
+  foreignField: "worker",
+});
+
+UserSchema.virtual("crews_led", {
+  ref: "Crew",
+  localField: "_id",
+  foreignField: "leader",
+});
+
+UserSchema.virtual("crews_member", {
+  ref: "Crew",
+  localField: "_id",
+  foreignField: "members",
+});
+
 const UserModel = model("User", UserSchema);
 export default UserModel;

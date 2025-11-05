@@ -13,6 +13,8 @@ const CrewSchema = new Schema(
     deleted_at: { type: Date, default: null },
   },
   {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     timestamps: {
       createdAt: "created_at",
       updatedAt: "updated_at",

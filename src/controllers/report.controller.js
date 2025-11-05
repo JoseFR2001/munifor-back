@@ -1,13 +1,29 @@
 import ReportModel from "../models/report.model.js";
+import UserModel from "../models/user.model.js";
 
 export const createReport = async (req, res) => {
   try {
-    //!Debo añadir el tema de que el author sea el user logueado
-    //!Debo añadir logica para que detecte quien lo hace
-    //!Si es ciudadano, que el author sea el user logueado
-    //!Si es un trabajador, que el reporte tenga un nuevo campo
-    //!Este nuevo campo se llamara  is_avanced
-    const newReport = await ReportModel.create(req.body);
+    // Consultar el usuario en la base de datos
+    const user = await UserModel.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ ok: false, msg: "Usuario no encontrado" });
+    }
+    // Verificar si el ciudadano está baneado
+    if (
+      user.role === "Ciudadano" &&
+      user.role_data?.is_banned !== null &&
+      user.role_data?.is_banned !== false
+    ) {
+      return res.status(403).json({
+        ok: false,
+        msg: "No puedes crear reportes porque estás baneado.",
+      });
+    }
+    // Crear el reporte con el author correcto
+    const newReport = await ReportModel.create({
+      ...req.body,
+      author: user._id,
+    });
     return res.status(201).json({
       ok: true,
       report: newReport,
@@ -52,10 +68,10 @@ export const getReportById = async (req, res) => {
 };
 
 export const getAllReportsForAuthor = async (req, res) => {
-  const { id } = req.params;
   try {
-    // ! Debo modificar esto para que tome el id del user logueado sin que se reciba por params
-    const reports = await ReportModel.find({ author: id });
+    // Usar el id del usuario logueado
+    const authorId = req.user._id;
+    const reports = await ReportModel.find({ author: authorId });
     return res.status(200).json({
       ok: true,
       reports,
