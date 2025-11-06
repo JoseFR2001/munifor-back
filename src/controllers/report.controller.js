@@ -160,7 +160,10 @@ export const acceptReport = async (req, res) => {
     const { id } = req.params;
     const updatedReport = await ReportModel.findByIdAndUpdate(
       id,
-      { status: "Aceptado" },
+      {
+        status: "Aceptado",
+        approved_at: new Date(),
+      },
       { new: true }
     );
     if (!updatedReport) {
@@ -177,7 +180,10 @@ export const completeReport = async (req, res) => {
     const { id } = req.params;
     const updatedReport = await ReportModel.findByIdAndUpdate(
       id,
-      { status: "Completado" },
+      {
+        status: "Completado",
+        completed_at: new Date(),
+      },
       { new: true }
     );
     if (!updatedReport) {

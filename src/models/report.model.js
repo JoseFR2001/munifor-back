@@ -16,13 +16,15 @@ const ReportSchema = new Schema(
     },
     report_type: {
       type: String,
-      enum: ["Bache", "Alumbrado", "Basura", "Incidente", "Otro"],
-      default: "Incidente",
+      enum: ["Bache", "Alumbrado", "Basura", "Otro"],
+      default: "",
     },
     other_type_detail: {
       type: String,
       default: null,
     },
+    approved_at: { type: Date, default: null },
+    completed_at: { type: Date, default: null },
     deleted_at: { type: Date, default: null },
   },
   {
