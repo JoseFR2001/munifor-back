@@ -3,10 +3,11 @@ import authRoutes from "./auth.routes.js";
 import crewRouter from "./crew.routes.js";
 import taskRouter from "./task.routes.js";
 import reportRouter from "./report.route.js";
-import progressReportRouter from "./progress_report.routes.js";
+import routerProgress from "./progress_report.routes.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import dashboardRouter from "./dashboard.routes.js";
 import userRoutes from "./user.routes.js";
+import statisticsRoutes from "./statistics.routes.js";
 
 const router = Router();
 
@@ -18,8 +19,9 @@ router.use(authMiddleware);
 router.use(crewRouter);
 router.use(taskRouter);
 router.use(reportRouter);
-router.use(progressReportRouter);
+router.use(routerProgress);
 router.use(userRoutes);
 router.use(dashboardRouter);
+router.use(statisticsRoutes);
 
 export default router;

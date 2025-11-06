@@ -64,7 +64,7 @@ export const getChartDoughnut = async (req, res) => {
   }
 };
 
-export const getChartLineReports = async (req, res) => {
+export const getChartLineReportsPerYear = async (req, res) => {
   try {
     // Obtener el año actual o el año especificado en query params
     const year = req.query.year

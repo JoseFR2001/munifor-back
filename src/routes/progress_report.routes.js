@@ -7,12 +7,12 @@ import {
   deleteProgressReport,
 } from "../controllers/progress_report.controller.js";
 
-const router = Router();
+const routerProgress = Router();
 
-router.post("/progress-report", createProgressReport);
-router.get("/progress-report", getAllProgressReports);
-router.get("/progress-report/:id", getProgressReportById);
-router.put("/progress-report/:id", updateProgressReport);
-router.delete("/progress-report/:id", deleteProgressReport);
+routerProgress.post("/progress-report", createProgressReport);
+routerProgress.get("/progress-report", getAllProgressReports);
+routerProgress.get("/progress-report/:id", getProgressReportById);
+routerProgress.put("/progress-report/:id", updateProgressReport);
+routerProgress.delete("/progress-report/:id", deleteProgressReport);
 
-export default router;
+export default routerProgress;

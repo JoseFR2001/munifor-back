@@ -1,8 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import router from "./src/routes/index.routes.js";
 import initDb from "./src/config/database.js";
+import router from "./src/routes/index.js";
 
 // Importa la tarea automática para rechazar reportes
 import "./src/jobs/auto_reject_reports.js";
