@@ -10,6 +10,11 @@ const ReportSchema = new Schema(
       default: "Pendiente",
     },
     author: { type: Types.ObjectId, ref: "User" },
+    assigned_operator: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
     location: {
       lat: { type: Number, required: true },
       lng: { type: Number, required: true },

@@ -142,7 +142,7 @@ export const reviewReport = async (req, res) => {
   try {
     const updatedReport = await ReportModel.findByIdAndUpdate(
       id,
-      { status: "Revisado" }, // El backend decide el nuevo valor
+      { status: "Revisado", assigned_operator: req.user._id }, // El backend decide el nuevo valor
       { new: true }
     );
     if (!updatedReport) {

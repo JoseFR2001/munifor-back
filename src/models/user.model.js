@@ -84,6 +84,12 @@ UserSchema.virtual("reports", {
   foreignField: "author",
 });
 
+UserSchema.virtual("assigned_reports", {
+  ref: "Report",
+  localField: "_id",
+  foreignField: "assigned_operator",
+});
+
 UserSchema.virtual("progress_reports", {
   ref: "ProgressReport",
   localField: "_id",

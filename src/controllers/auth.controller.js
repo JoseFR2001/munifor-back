@@ -106,6 +106,31 @@ export const login = async (req, res) => {
   }
 };
 
+export const updateProfile = async (req, res) => {
+  const userId = req.user._id;
+  try {
+    console.log(userId);
+    console.log({ profile: { ...req.body } });
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { profile: { ...req.body } },
+      {
+        new: true,
+      }
+    );
+    return res.json({
+      ok: true,
+      msg: "Perfil actualizado exitosamente",
+      user: updatedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
 export const logout = (req, res) => {
   res.clearCookie("token");
   return res.status(200).json({ ok: true, msg: "Logout exitoso" });

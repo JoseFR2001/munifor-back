@@ -1,5 +1,5 @@
-import ReportModel from "../models/report.model";
-import UserModel from "../models/user.model";
+import ReportModel from "../models/report.model.js";
+import UserModel from "../models/user.model.js";
 
 export const getChartBar = async (req, res) => {
   try {

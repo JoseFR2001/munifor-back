@@ -4,7 +4,7 @@ import {
   getChartDoughnut,
   getChartLineReportsPerYear,
   getChartLineReportTypes,
-} from "../controllers/statistics.controller";
+} from "../controllers/statistics.controller.js";
 
 const statisticsRoutes = Router();
 
