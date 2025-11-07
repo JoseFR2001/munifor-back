@@ -8,10 +8,12 @@ import { authMiddleware } from "../middlewares/auth.middleware.js";
 import dashboardRouter from "./dashboard.routes.js";
 import userRoutes from "./user.routes.js";
 import statisticsRoutes from "./statistics.routes.js";
+import mapRoutes from "./map.routes.js";
 
 const router = Router();
 
 // Rutas públicas (sin middleware)
+router.use(mapRoutes);
 router.use(authRoutes);
 
 // Rutas protegidas (con middleware)
