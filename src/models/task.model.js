@@ -21,6 +21,11 @@ const TaskSchema = new Schema(
       enum: ["Reparación", "Mantenimiento", "Recolección", "Supervisión"],
       required: true,
     },
+    assigned_operator: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
   },
   {
     toJSON: { virtuals: true },

@@ -108,5 +108,11 @@ UserSchema.virtual("crews_member", {
   foreignField: "members",
 });
 
+UserSchema.virtual("assigned_tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "assigned_operator",
+});
+
 const UserModel = model("User", UserSchema);
 export default UserModel;
