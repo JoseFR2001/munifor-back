@@ -8,10 +8,15 @@ export const getMapaData = async (req, res) => {
     const reports = await ReportModel.find({ deleted_at: null });
 
     // Obtener tareas no eliminadas
-    const tasks = await TaskModel.find({ deleted_at: null });
+    const tasks = await TaskModel.find({ deleted_at: null }).populate(
+      "report",
+      "location report_type"
+    );
 
     // Obtener reportes de progreso
-    const progress = await ProgressReportModel.find({ deleted_at: null });
+    const progress = await ProgressReportModel.find({
+      deleted_at: null,
+    });
 
     return res.status(200).json({
       ok: true,

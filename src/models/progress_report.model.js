@@ -13,6 +13,10 @@ const ProgressReportSchema = new Schema(
       default: "Pendiente",
     },
     deleted_at: { type: Date, default: null },
+    location: {
+      lat: { type: Number, required: false },
+      lng: { type: Number, required: false },
+    },
   },
   {
     timestamps: {
