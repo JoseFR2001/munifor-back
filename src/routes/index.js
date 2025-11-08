@@ -15,6 +15,8 @@ const router = Router();
 // Rutas públicas (sin middleware)
 router.use(mapRoutes);
 router.use(authRoutes);
+router.use(dashboardRouter);
+router.use(statisticsRoutes);
 
 // Rutas protegidas (con middleware)
 router.use(authMiddleware);
@@ -23,7 +25,5 @@ router.use(taskRouter);
 router.use(reportRouter);
 router.use(routerProgress);
 router.use(userRoutes);
-router.use(dashboardRouter);
-router.use(statisticsRoutes);
 
 export default router;
