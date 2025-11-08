@@ -12,10 +12,15 @@ const TaskSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["Pendiente", "En Progreso", "Finalizada"], 
+      enum: ["Pendiente", "En Progreso", "Finalizada"],
       default: "Pendiente",
     },
     deleted_at: { type: Date, default: null },
+    task_type: {
+      type: String,
+      enum: ["Reparación", "Mantenimiento", "Recolección", "Supervisión"],
+      required: true,
+    },
   },
   {
     toJSON: { virtuals: true },

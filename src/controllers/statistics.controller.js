@@ -136,6 +136,30 @@ const getChartLineReportTypesData = async (year) => {
   return chartLineReportTypesData;
 };
 
+export const getOperatorStatistics = async (req, res) => {
+  try {
+    const year = req.query.year
+      ? parseInt(req.query.year)
+      : new Date().getFullYear();
+    const chartDoughnutData = await getChartDoughnutData();
+    const chartLineReportsData = await getChartLineReportsPerYearData(year);
+    const chartLineReportTypesData = await getChartLineReportTypesData(year);
+    return res.status(200).json({
+      ok: true,
+      data: {
+        chartDoughnutData,
+        chartLineReportsData,
+        chartLineReportTypesData,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
 export const getAdminStatistics = async (req, res) => {
   try {
     const year = req.query.year

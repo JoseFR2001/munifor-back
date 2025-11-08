@@ -178,11 +178,13 @@ export const getAdminDashboard = async (req, res) => {
       deleted_at: null,
     });
 
+    const totalTasks = await TaskModel.countDocuments({});
+    const totalCompletedTasks = await TaskModel.countDocuments({
+      status: "Finalizada",
+    });
     // Tasa de eficiencia
     const efficiencyRate =
-      totalReports > 0
-        ? Math.round((completedReports / totalReports) * 100)
-        : 0;
+      totalTasks > 0 ? Math.round((totalCompletedTasks / totalTasks) * 100) : 0;
 
     return res.json({
       ok: true,
