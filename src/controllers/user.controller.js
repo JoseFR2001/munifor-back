@@ -15,3 +15,18 @@ export const getUserById = async (req, res) => {
     });
   }
 };
+
+export const getWorkers = async (req, res) => {
+  try {
+    const workers = await UserModel.find({ role: "Trabajador" });
+    return res.status(200).json({
+      ok: true,
+      workers,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};

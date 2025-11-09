@@ -1,8 +1,12 @@
 import TaskModel from "../models/task.model.js";
 
 export const createTask = async (req, res) => {
+  const operatorId = req.user._id;
   try {
-    const newTask = await TaskModel.create(req.body);
+    const newTask = await TaskModel.create({
+      ...req.body,
+      assigned_operator: operatorId,
+    });
     return res.status(201).json({
       ok: true,
       task: newTask,
@@ -47,8 +51,25 @@ export const getTaskById = async (req, res) => {
 export const getTaskWorker = async (req, res) => {
   const { crewId } = req.params;
   // ! Debo modificar esto para que tome el id del user logueado
+  // ! No puede recibir el worker porque la relacion es worker -> crew -> task
   try {
     const tasks = await TaskModel.find({ crew: crewId });
+    return res.status(200).json({
+      ok: true,
+      tasks,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
+export const getTaskOperator = async (req, res) => {
+  const operatorId = req.user._id;
+  try {
+    const tasks = await TaskModel.find({ assigned_operator: operatorId });
     return res.status(200).json({
       ok: true,
       tasks,

@@ -8,6 +8,7 @@ export const createCrew = async (req, res) => {
       crew: newCrew,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       ok: false,
       msg: "Error interno del servidor",
@@ -17,7 +18,9 @@ export const createCrew = async (req, res) => {
 
 export const getAllCrews = async (req, res) => {
   try {
-    const crews = await CrewModel.find();
+    const crews = await CrewModel.find()
+      .populate("leader", "username")
+      .populate("members", "username");
     return res.status(200).json({
       ok: true,
       crews,

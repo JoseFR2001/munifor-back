@@ -28,6 +28,7 @@ const ReportSchema = new Schema(
       type: String,
       default: null,
     },
+    task_assigned: { type: Boolean, default: false },
     approved_at: { type: Date, default: null },
     completed_at: { type: Date, default: null },
     deleted_at: { type: Date, default: null },

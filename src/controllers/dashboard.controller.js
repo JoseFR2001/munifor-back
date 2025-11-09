@@ -126,7 +126,8 @@ export const getOperatorDashboard = async (req, res) => {
 
     // Tareas asignadas (tareas asignadas a cuadrillas activas)
     const assignedTasksCount = await TaskModel.countDocuments({
-      status: { $in: ["Pendiente", "En Progreso"] },
+      status: "En Progreso",
+      assigned_operator: operatorId,
     });
 
     return res.json({

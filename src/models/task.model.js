@@ -4,7 +4,7 @@ const TaskSchema = new Schema(
   {
     title: { type: String, required: true },
     crew: { type: Types.ObjectId, ref: "Crew" },
-    report: { type: Types.ObjectId, ref: "Report", required: true },
+    report: [{ type: Types.ObjectId, ref: "Report", required: true }],
     priority: {
       type: String,
       enum: ["Baja", "Media", "Alta"],

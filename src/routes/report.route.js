@@ -6,8 +6,10 @@ import {
   deleteReport,
   getAllReports,
   getAllReportsForAuthor,
+  getNewReports,
   getReportById,
-  getReportsAccepted,
+  getReportsByOperator,
+  getReportsOperatorAccepted,
   getReportsPending,
   rejectReport,
   reviewReport,
@@ -19,12 +21,16 @@ const reportRouter = Router();
 // * Rutas para crear reporte
 reportRouter.post("/report", createReport);
 
+// * Ruta para los reportes que tiene un operador asignado
+reportRouter.get("/report/operator", getReportsByOperator);
+reportRouter.get("/reports/operator/accepted", getReportsOperatorAccepted);
+
 // * Rutas para obtener reportes
 reportRouter.get("/reports", getAllReports);
 reportRouter.get("/reports/pending", getReportsPending);
-reportRouter.get("/reports/accepted", getReportsAccepted);
 reportRouter.get("/reports/author", getAllReportsForAuthor);
 reportRouter.get("/report/:id", getReportById);
+reportRouter.get("/report/operator/new-reports", getNewReports);
 
 // * Ruta para actualizar el estado de un reporte
 reportRouter.put("/report/review/:id", reviewReport);

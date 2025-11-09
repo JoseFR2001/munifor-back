@@ -1,3 +1,4 @@
+import CrewModel from "../models/crew.model.js";
 import ReportModel from "../models/report.model.js";
 import UserModel from "../models/user.model.js";
 
@@ -36,6 +37,7 @@ export const createReport = async (req, res) => {
   }
 };
 
+// * Obtener reportes
 export const getAllReports = async (req, res) => {
   try {
     const reports = await ReportModel.find();
@@ -85,6 +87,42 @@ export const getAllReportsForAuthor = async (req, res) => {
   }
 };
 
+export const getReportsByOperator = async (req, res) => {
+  try {
+    const operatorId = req.user._id;
+    const reports = await ReportModel.find({
+      assigned_operator: operatorId,
+    }).populate("author", "username");
+    return res.status(200).json({
+      ok: true,
+      reports,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
+export const getNewReports = async (req, res) => {
+  try {
+    const reports = await ReportModel.find({ status: "Pendiente" }).populate(
+      "author",
+      "username"
+    );
+    return res.status(200).json({
+      ok: true,
+      reports,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
 // * Obtener reportes segun estado
 export const getReportsPending = async (req, res) => {
   try {
@@ -101,12 +139,19 @@ export const getReportsPending = async (req, res) => {
   }
 };
 
-export const getReportsAccepted = async (req, res) => {
+export const getReportsOperatorAccepted = async (req, res) => {
+  const operatorId = req.user._id;
   try {
-    const reports = await ReportModel.find({ status: "Aceptado" });
+    const reports = await ReportModel.find({
+      status: "Aceptado",
+      task_assigned: false,
+      assigned_operator: operatorId,
+    });
+    const crews = await CrewModel.find({ deleted_at: null });
     return res.status(200).json({
       ok: true,
       reports,
+      crews,
     });
   } catch (error) {
     return res.status(500).json({
