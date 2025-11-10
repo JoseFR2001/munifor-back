@@ -122,11 +122,11 @@ const imageFilter = (req, file, cb) => {
 /**
  * Middleware para subir UNA foto de perfil
  * Campo esperado en el formulario: "profile_picture"
- * Límite de tamaño: 5MB
+ * Límite de tamaño: 15MB
  */
 export const uploadProfilePicture = multer({
   storage: profileStorage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB máximo
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB máximo
   fileFilter: imageFilter,
 }).single("profile_picture"); // .single() = espera UN solo archivo
 
@@ -134,11 +134,11 @@ export const uploadProfilePicture = multer({
  * Middleware para subir MÚLTIPLES imágenes de reportes
  * Campo esperado en el formulario: "images"
  * Máximo: 5 imágenes
- * Límite de tamaño: 5MB por archivo
+ * Límite de tamaño: 15MB por archivo
  */
 export const uploadReportImages = multer({
   storage: reportStorage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB por archivo
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB por archivo
   fileFilter: imageFilter,
 }).array("images", 5); // .array() = espera MÚLTIPLES archivos (máximo 5)
 
@@ -146,11 +146,11 @@ export const uploadReportImages = multer({
  * Middleware para subir MÚLTIPLES imágenes de avances
  * Campo esperado en el formulario: "images"
  * Máximo: 5 imágenes
- * Límite de tamaño: 5MB por archivo
+ * Límite de tamaño: 15MB por archivo
  */
 export const uploadProgressImages = multer({
   storage: progressStorage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB por archivo
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB por archivo
   fileFilter: imageFilter,
 }).array("images", 5); // .array() = espera MÚLTIPLES archivos (máximo 5)
 
