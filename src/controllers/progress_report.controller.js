@@ -1,8 +1,22 @@
 import ProgressReportModel from "../models/progress_report.model.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const createProgressReport = async (req, res) => {
   try {
-    const newProgressReport = await ProgressReportModel.create(req.body);
+    // Procesar imágenes si existen
+    const images = req.files
+      ? req.files.map((file) => `uploads/progress/${file.filename}`)
+      : [];
+
+    const newProgressReport = await ProgressReportModel.create({
+      ...req.body,
+      images,
+    });
     return res
       .status(201)
       .json({ ok: true, progress_report: newProgressReport });
@@ -49,9 +63,21 @@ export const getProgressReportById = async (req, res) => {
 export const updateProgressReport = async (req, res) => {
   const { id } = req.params;
   try {
+    // Procesar nuevas imágenes si existen
+    const newImages = req.files
+      ? req.files.map((file) => `uploads/progress/${file.filename}`)
+      : [];
+
+    const updateData = { ...req.body };
+    if (newImages.length > 0) {
+      // Agregar nuevas imágenes a las existentes
+      const progressReport = await ProgressReportModel.findById(id);
+      updateData.images = [...(progressReport.images || []), ...newImages];
+    }
+
     const updatedProgressReport = await ProgressReportModel.findByIdAndUpdate(
       id,
-      req.body,
+      updateData,
       { new: true }
     );
     return res

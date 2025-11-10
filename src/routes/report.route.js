@@ -15,11 +15,12 @@ import {
   reviewReport,
   updateReport,
 } from "../controllers/report.controller.js";
+import { uploadReportImages } from "../config/multer.js";
 
 const reportRouter = Router();
 
-// * Rutas para crear reporte
-reportRouter.post("/report", createReport);
+// * Rutas para crear reporte (con imágenes)
+reportRouter.post("/report", uploadReportImages, createReport);
 
 // * Ruta para los reportes que tiene un operador asignado
 reportRouter.get("/report/operator", getReportsByOperator);
@@ -38,8 +39,8 @@ reportRouter.put("/report/accept/:id", acceptReport);
 reportRouter.put("/report/complete/:id", completeReport);
 reportRouter.put("/report/reject/:id", rejectReport);
 
-// * Rutas para actualizar y eliminar reportes
-reportRouter.put("/report/:id", updateReport);
+// * Rutas para actualizar y eliminar reportes (con imágenes opcionales)
+reportRouter.put("/report/:id", uploadReportImages, updateReport);
 reportRouter.delete("/report/:id", deleteReport);
 
 export default reportRouter;

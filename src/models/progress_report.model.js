@@ -12,6 +12,10 @@ const ProgressReportSchema = new Schema(
       enum: ["Pendiente", "En Progreso", "Finalizado"],
       default: "Pendiente",
     },
+    images: {
+      type: [String],
+      default: [],
+    },
     deleted_at: { type: Date, default: null },
     location: {
       lat: { type: Number, required: false },

@@ -28,6 +28,10 @@ const ReportSchema = new Schema(
       type: String,
       default: null,
     },
+    images: {
+      type: [String],
+      default: [],
+    },
     task_assigned: { type: Boolean, default: false },
     approved_at: { type: Date, default: null },
     completed_at: { type: Date, default: null },

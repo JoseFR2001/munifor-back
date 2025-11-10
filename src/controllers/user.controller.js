@@ -1,4 +1,10 @@
 import UserModel from "../models/user.model.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const getUserById = async (req, res) => {
   const { id } = req.params;
@@ -102,6 +108,55 @@ export const putIsAvailableUser = async (req, res) => {
     return res.status(200).json({
       ok: true,
       user: updatedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
+// Actualizar foto de perfil
+export const updateProfilePicture = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        ok: false,
+        msg: "No se ha enviado ninguna imagen",
+      });
+    }
+
+    // Obtener usuario actual para eliminar imagen anterior
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Usuario no encontrado",
+      });
+    }
+
+    // Eliminar imagen anterior si existe
+    if (user.profile_picture) {
+      const oldImagePath = path.join(__dirname, "../../", user.profile_picture);
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath);
+      }
+    }
+
+    // Guardar nueva ruta de imagen
+    const imagePath = `uploads/profiles/${req.file.filename}`;
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      id,
+      { profile_picture: imagePath },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      ok: true,
+      user: updatedUser,
+      imageUrl: `${req.protocol}://${req.get("host")}/${imagePath}`,
     });
   } catch (error) {
     return res.status(500).json({

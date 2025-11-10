@@ -1,6 +1,12 @@
 import CrewModel from "../models/crew.model.js";
 import ReportModel from "../models/report.model.js";
 import UserModel from "../models/user.model.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const createReport = async (req, res) => {
   try {
@@ -11,9 +17,15 @@ export const createReport = async (req, res) => {
 
     // ELIMINAR el bloque de role_data aquí
 
+    // Procesar imágenes si existen
+    const images = req.files
+      ? req.files.map((file) => `uploads/reports/${file.filename}`)
+      : [];
+
     const newReport = await ReportModel.create({
       ...req.body,
       author: user._id,
+      images,
     });
     return res.status(201).json({
       ok: true,
@@ -155,7 +167,23 @@ export const getReportsOperatorAccepted = async (req, res) => {
 export const updateReport = async (req, res) => {
   const { id } = req.params;
   try {
-    const updatedReport = await ReportModel.findByIdAndUpdate(id, req.body, {
+    // Procesar nuevas imágenes si existen
+    const newImages = req.files
+      ? req.files.map((file) => `uploads/reports/${file.filename}`)
+      : [];
+
+    // Si hay nuevas imágenes, agregarlas a las existentes o reemplazarlas según la lógica
+    const updateData = { ...req.body };
+    if (newImages.length > 0) {
+      // Opción 1: Agregar a las existentes
+      const report = await ReportModel.findById(id);
+      updateData.images = [...(report.images || []), ...newImages];
+
+      // Opción 2: Reemplazar todas (comentada)
+      // updateData.images = newImages;
+    }
+
+    const updatedReport = await ReportModel.findByIdAndUpdate(id, updateData, {
       new: true,
     });
     return res.status(200).json({

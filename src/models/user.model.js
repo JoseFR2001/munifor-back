@@ -57,6 +57,10 @@ const UserSchema = new Schema(
         default: "Otro",
       },
     },
+    profile_picture: {
+      type: String,
+      default: null,
+    },
 
     deleted_at: {
       type: Date,
