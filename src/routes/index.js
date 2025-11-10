@@ -13,9 +13,7 @@ import mapRoutes from "./map.routes.js";
 const router = Router();
 
 // Rutas públicas (sin middleware)
-router.use(mapRoutes);
 router.use(authRoutes);
-router.use(statisticsRoutes);
 
 // Rutas protegidas (con middleware)
 router.use(authMiddleware);
@@ -25,5 +23,7 @@ router.use(reportRouter);
 router.use(routerProgress);
 router.use(userRoutes);
 router.use(dashboardRouter);
+router.use(mapRoutes);
+router.use(statisticsRoutes);
 
 export default router;
