@@ -57,23 +57,44 @@ export const getDashboardWorker = async (req, res) => {
   const workerId = req.user._id;
 
   try {
-    // Conteo de tareas pendientes
+    // Primero encontrar el crew del worker
+    const crew = await CrewModel.findOne({
+      $or: [{ members: workerId }, { leader: workerId }],
+      deleted_at: null,
+    });
+
+    // Si no está en ningún crew, retornar todo en 0
+    if (!crew) {
+      return res.json({
+        ok: true,
+        counts: {
+          pending: 0,
+          inProgress: 0,
+          completed: 0,
+          total: 0,
+        },
+      });
+    }
+
+    // Contar tareas del crew
     const pendingCount = await TaskModel.countDocuments({
-      worker: workerId,
+      crew: crew._id,
       status: "Pendiente",
     });
-    // Conteo de tareas en progreso
+
     const inProgressCount = await TaskModel.countDocuments({
-      worker: workerId,
+      crew: crew._id,
       status: "En Progreso",
     });
-    // Conteo de tareas finalizadas
+
     const completedCount = await TaskModel.countDocuments({
-      worker: workerId,
+      crew: crew._id,
       status: "Finalizada",
     });
 
-    const totalCount = await TaskModel.countDocuments({ worker: workerId });
+    const totalCount = await TaskModel.countDocuments({
+      crew: crew._id,
+    });
 
     return res.json({
       ok: true,

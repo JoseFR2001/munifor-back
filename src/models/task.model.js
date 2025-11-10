@@ -26,6 +26,10 @@ const TaskSchema = new Schema(
       ref: "User",
       default: null,
     },
+    location: {
+      lat: { type: Number, required: false },
+      lng: { type: Number, required: false },
+    },
   },
   {
     toJSON: { virtuals: true },

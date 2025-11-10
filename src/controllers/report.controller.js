@@ -4,23 +4,13 @@ import UserModel from "../models/user.model.js";
 
 export const createReport = async (req, res) => {
   try {
-    // Consultar el usuario en la base de datos
     const user = await UserModel.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ ok: false, msg: "Usuario no encontrado" });
     }
-    // Verificar si el ciudadano está baneado
-    if (
-      user.role === "Ciudadano" &&
-      user.role_data?.is_banned !== null &&
-      user.role_data?.is_banned !== false
-    ) {
-      return res.status(403).json({
-        ok: false,
-        msg: "No puedes crear reportes porque estás baneado.",
-      });
-    }
-    // Crear el reporte con el author correcto
+
+    // ELIMINAR el bloque de role_data aquí
+
     const newReport = await ReportModel.create({
       ...req.body,
       author: user._id,

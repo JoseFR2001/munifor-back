@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  acceptTask,
   createTask,
   deleteTask,
   getAllTasks,
@@ -16,6 +17,7 @@ taskRouter.get("/task", getAllTasks);
 taskRouter.get("/task/worker", getTaskWorker);
 taskRouter.get("/task/operator", getTaskOperator);
 taskRouter.get("/task/:id", getTaskById);
+taskRouter.put("/task/assign/:id", acceptTask);
 taskRouter.put("/task/:id", updateTask);
 taskRouter.delete("/task/:id", deleteTask);
 

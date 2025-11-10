@@ -33,6 +33,35 @@ export const getAllCrews = async (req, res) => {
   }
 };
 
+export const getCrewByWorker = async (req, res) => {
+  const workerId = req.user._id;
+  try {
+    const currentCrew = await CrewModel.findOne({
+      $or: [{ members: workerId }, { leader: workerId }],
+    })
+      .populate("leader", "username")
+      .populate("members", "username");
+
+    const pastCrews = await CrewModel.findOne({
+      $or: [{ members: workerId }, { leader: workerId }],
+      deleted_at: { $ne: null },
+    })
+      .populate("leader", "username")
+      .populate("members", "username");
+
+    return res.status(200).json({
+      ok: true,
+      crew: currentCrew,
+      pastCrews,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
 export const getCrewById = async (req, res) => {
   const { id } = req.params;
   try {

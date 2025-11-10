@@ -3,62 +3,15 @@ import { generateToken } from "../helpers/jwt.helper.js";
 import UserModel from "../models/user.model.js";
 
 export const register = async (req, res) => {
-  const { password, role } = req.body;
+  const { password } = req.body;
   try {
     const hashedPassword = await hashPassword(password);
-
-    let userData;
-    if (role == "Ciudadano") {
-      userData = {
-        ...req.body,
-        password: hashedPassword,
-        role_data: {
-          is_banned: false,
-          count_banned: 0,
-          banned_at: null,
-          banned_off: null,
-        },
-      };
-    } else if (role == "Operador") {
-      userData = {
-        ...req.body,
-        password: hashedPassword,
-        role_data: {
-          is_approved: false,
-          approved_at: null,
-          rejected_at: null,
-          rejection_reason: null,
-        },
-      };
-    } else if (role == "Trabajador") {
-      userData = {
-        ...req.body,
-        password: hashedPassword,
-        role_data: {
-          is_approved: false,
-          approved_at: null,
-          rejected_at: null,
-          rejection_reason: null,
-          is_available: true,
-          is_leader: false,
-          leader_at: null,
-        },
-      };
-    } else if (role == "Administrador") {
-      userData = {
-        ...req.body,
-        password: hashedPassword,
-        role_data: {},
-      };
-    } else {
-      return res.status(400).json({
-        ok: false,
-        msg: "Rol inválido",
-      });
-    }
-
+    const userData = {
+      ...req.body,
+      password: hashedPassword,
+      ...(req.body.role === "Ciudadano" ? { is_active: true } : {}),
+    };
     const newUser = await UserModel.create(userData);
-
     return res.status(201).json({
       ok: true,
       msg: "Usuario registrado exitosamente",
@@ -82,11 +35,19 @@ export const login = async (req, res) => {
         msg: "Credenciales inválidas",
       });
     }
+
     const passwordExist = await comparePassword(password, user.password);
     if (!passwordExist) {
       return res.status(401).json({
         ok: false,
         msg: "Credenciales inválidas",
+      });
+    }
+
+    if (!user.is_active) {
+      return res.status(403).json({
+        ok: false,
+        msg: "Tu cuenta aún no ha sido activada por un administrador.",
       });
     }
 
@@ -105,7 +66,6 @@ export const login = async (req, res) => {
     });
   }
 };
-
 export const updateProfile = async (req, res) => {
   const userId = req.user._id;
   try {

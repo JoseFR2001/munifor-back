@@ -22,6 +22,20 @@ export const getAllProgressReports = async (req, res) => {
   }
 };
 
+export const getProgressByLeader = async (req, res) => {
+  const leaderId = req.user._id;
+  try {
+    const progressReports = await ProgressReportModel.find({
+      worker: leaderId,
+    });
+    return res
+      .status(200)
+      .json({ ok: true, progress_reports: progressReports });
+  } catch (error) {
+    return res.status(500).json({ ok: false, msg: "Internal server error" });
+  }
+};
+
 export const getProgressReportById = async (req, res) => {
   const { id } = req.params;
   try {

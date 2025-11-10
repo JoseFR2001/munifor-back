@@ -15,16 +15,22 @@ const UserSchema = new Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     role: {
       type: String,
       enum: ["Ciudadano", "Operador", "Trabajador", "Administrador"],
       default: "Ciudadano",
     },
-    // Campos específicos según el rol
-    role_data: {
-      type: Schema.Types.Mixed,
-      default: {},
+    // Estado de activación por admin
+    is_active: {
+      type: Boolean,
+      default: false,
+    },
+    // Disponible para ser asignado a un crew
+    is_available: {
+      type: Boolean,
+      default: true,
     },
     profile: {
       first_name: {
