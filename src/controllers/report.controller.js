@@ -1,37 +1,57 @@
+//* ============================================
+//* CONTROLADOR DE REPORTES
+//* ============================================
+
+//! IMPORTS DE MODELOS Y DEPENDENCIAS
 import CrewModel from "../models/crew.model.js";
 import ReportModel from "../models/report.model.js";
 import UserModel from "../models/user.model.js";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "fs"; // Sistema de archivos
+import path from "path"; // Manejo de rutas
+import { fileURLToPath } from "url"; // Conversión de URL
 
+//* CONFIGURACIÓN DE __dirname PARA MÓDULOS ES6
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+//* ============================================
+//* CREAR REPORTE (CON IMÁGENES)
+//* ============================================
+
+/**
+ * Crea un nuevo reporte ciudadano
+ * - Procesa imágenes subidas con Multer (máximo 5)
+ * - Asocia el reporte al usuario autenticado
+ */
 export const createReport = async (req, res) => {
   try {
+    //? Obtener el usuario autenticado
     const user = await UserModel.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ ok: false, msg: "Usuario no encontrado" });
     }
 
-    // ELIMINAR el bloque de role_data aquí
-
-    // Procesar imágenes si existen
+    //? Procesar imágenes si existen
+    // req.files viene de Multer cuando se suben múltiples archivos
+    // Mapea cada archivo a su ruta: "uploads/reports/report-123.jpg"
     const images = req.files
       ? req.files.map((file) => `uploads/reports/${file.filename}`)
       : [];
 
+    //? Crear el nuevo reporte en la base de datos
     const newReport = await ReportModel.create({
-      ...req.body,
-      author: user._id,
-      images,
+      ...req.body, // Todos los campos del body (title, description, location, etc.)
+      author: user._id, // Asociar al usuario autenticado
+      images, // Array de rutas de imágenes
     });
+
+    //* Respuesta exitosa
     return res.status(201).json({
       ok: true,
       report: newReport,
     });
   } catch (error) {
+    //! Error del servidor
     return res.status(500).json({
       ok: false,
       msg: "Error interno del servidor",
@@ -216,79 +236,132 @@ export const updateReport = async (req, res) => {
   }
 };
 
-// * Actualizar estados
+//* ============================================
+//* ACTUALIZAR ESTADOS DE REPORTES
+//* ============================================
+
+/**
+ * Cambia el estado de un reporte a "Revisado"
+ * - Asigna el operador que revisó el reporte
+ * - Solo operadores pueden hacer esto
+ */
 export const reviewReport = async (req, res) => {
   const { id } = req.params; // El id del reporte a actualizar
   console.log(id);
   try {
+    //? Actualizar estado a "Revisado" y asignar operador
     const updatedReport = await ReportModel.findByIdAndUpdate(
       id,
-      { status: "Revisado", assigned_operator: req.user._id }, // El backend decide el nuevo valor
-      { new: true }
+      {
+        status: "Revisado",
+        assigned_operator: req.user._id, // Operador autenticado
+      },
+      { new: true } // Devolver documento actualizado
     );
+
+    //! Si no existe el reporte
     if (!updatedReport) {
       return res.status(404).json({ ok: false, msg: "Report not found" });
     }
+
+    //* Respuesta exitosa
     return res.status(200).json({ ok: true, report: updatedReport });
   } catch (error) {
+    //! Error del servidor
     return res
       .status(500)
       .json({ ok: false, msg: "Error interno del servidor" });
   }
 };
+
+/**
+ * Cambia el estado de un reporte a "Aceptado"
+ * - Registra la fecha de aprobación
+ * - El operador puede crear una tarea después de esto
+ */
 export const acceptReport = async (req, res) => {
   try {
     const { id } = req.params;
+
+    //? Actualizar estado a "Aceptado" y registrar fecha
     const updatedReport = await ReportModel.findByIdAndUpdate(
       id,
       {
         status: "Aceptado",
-        approved_at: new Date(),
+        approved_at: new Date(), // Registrar fecha de aprobación
       },
       { new: true }
     );
+
+    //! Si no existe el reporte
     if (!updatedReport) {
       return res.status(404).json({ ok: false, msg: "Report not found" });
     }
+
+    //* Respuesta exitosa
     return res.status(200).json({ ok: true, report: updatedReport });
   } catch (error) {
+    //! Error del servidor
     return res.status(500).json({ ok: false, msg: "Internal server error" });
   }
 };
 
+/**
+ * Cambia el estado de un reporte a "Completado"
+ * - Registra la fecha de finalización
+ * - Normalmente esto se hace automáticamente cuando el ProgressReport se finaliza
+ */
 export const completeReport = async (req, res) => {
   try {
     const { id } = req.params;
+
+    //? Actualizar estado a "Completado" y registrar fecha
     const updatedReport = await ReportModel.findByIdAndUpdate(
       id,
       {
         status: "Completado",
-        completed_at: new Date(),
+        completed_at: new Date(), // Registrar fecha de finalización
       },
       { new: true }
     );
+
+    //! Si no existe el reporte
     if (!updatedReport) {
       return res.status(404).json({ ok: false, msg: "Report not found" });
     }
+
+    //* Respuesta exitosa
     return res.status(200).json({ ok: true, report: updatedReport });
   } catch (error) {
+    //! Error del servidor
     return res.status(500).json({ ok: false, msg: "Internal server error" });
   }
 };
 
+/**
+ * Cambia el estado de un reporte a "Rechazado"
+ * - El operador determina que el reporte no procede
+ */
 export const rejectReport = async (req, res) => {
   try {
     const { id } = req.params;
+
+    //? Actualizar estado a "Rechazado"
     const updatedReport = await ReportModel.findByIdAndUpdate(
       id,
       { status: "Rechazado" },
       { new: true }
     );
+
+    //! Si no existe el reporte
     if (!updatedReport) {
       return res.status(404).json({ ok: false, msg: "Report not found" });
     }
+
+    //* Respuesta exitosa
     return res.status(200).json({ ok: true, report: updatedReport });
   } catch (error) {
+    //! Error del servidor
     return res.status(500).json({ ok: false, msg: "Internal server error" });
   }
 };
@@ -309,3 +382,32 @@ export const deleteReport = async (req, res) => {
     });
   }
 };
+
+//* ============================================
+//* TRADUCCIÓN DE CONSTANTES
+//* ============================================
+// createReport = crear reporte
+// getAllReports = obtener todos los reportes
+// getReportById = obtener reporte por ID
+// getAllReportsForAuthor = obtener todos los reportes del autor
+// getReportsByOperator = obtener reportes por operador
+// getNewReports = obtener reportes nuevos
+// getReportsPending = obtener reportes pendientes
+// getReportsCompleted = obtener reportes completados
+// getReportsOperatorAccepted = obtener reportes aceptados del operador
+// updateReport = actualizar reporte
+// reviewReport = revisar reporte
+// acceptReport = aceptar reporte
+// completeReport = completar reporte
+// rejectReport = rechazar reporte
+// deleteReport = eliminar reporte
+// images = imágenes
+// newImages = nuevas imágenes
+// author = autor
+// assigned_operator = operador asignado
+// approved_at = aprobado en (fecha)
+// completed_at = completado en (fecha)
+// task_assigned = tarea asignada (booleano)
+// populate = poblar/llenar (incluir datos de referencia)
+// status = estado
+// $lte = Less Than or Equal (menor o igual que)
