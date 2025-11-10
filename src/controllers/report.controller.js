@@ -141,6 +141,24 @@ export const getReportsPending = async (req, res) => {
   }
 };
 
+export const getReportsCompleted = async (req, res) => {
+  try {
+    const reports = await ReportModel.find({ status: "Completado" })
+      .populate("author", "username email")
+      .populate("assigned_operator", "username email")
+      .sort({ completed_at: -1 }); // Más recientes primero
+    return res.status(200).json({
+      ok: true,
+      reports,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
 export const getReportsOperatorAccepted = async (req, res) => {
   const operatorId = req.user._id;
   try {
