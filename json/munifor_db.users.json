@@ -1,0 +1,210 @@
+[{
+  "_id": {
+    "$oid": "691cadae1b9511da716ac81a"
+  },
+  "username": "Ciudadano1",
+  "email": "ciudadano1@gmail.com",
+  "password": "$2b$10$ui8SocFEUYvunXT4fDoGTOjLYyilaLs0pGHOKBjGKZaOCpwvg8Muu",
+  "role": "Ciudadano",
+  "is_active": true,
+  "is_available": true,
+  "profile": {
+    "first_name": "Ciudadano",
+    "last_name": "Uno",
+    "phone": "3704300000",
+    "age": 18,
+    "address": "Av. Ciudadano 1",
+    "sex": "Hombre",
+    "dni": "30000000"
+  },
+  "profile_picture": null,
+  "deleted_at": null,
+  "password_reset_token": null,
+  "password_reset_expires": null,
+  "created_at": {
+    "$date": "2025-11-18T17:32:30.396Z"
+  },
+  "updated_at": {
+    "$date": "2025-11-18T17:32:30.396Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "691cae611b9511da716ac81c"
+  },
+  "username": "Trabajador1",
+  "email": "trabajador1@gmail.com",
+  "password": "$2b$10$./BnFcdX/Jwv70Xb71glkerA2hg6gE2OJZnCDoDaH0l9Tfu.KiC2W",
+  "role": "Trabajador",
+  "is_active": false,
+  "is_available": true,
+  "profile": {
+    "first_name": "Trabajador",
+    "last_name": "Uno",
+    "phone": "3704200000",
+    "age": 30,
+    "address": "Av. Trabajador1",
+    "sex": "Mujer",
+    "dni": "20000000"
+  },
+  "profile_picture": null,
+  "deleted_at": null,
+  "password_reset_token": null,
+  "password_reset_expires": null,
+  "created_at": {
+    "$date": "2025-11-18T17:35:29.932Z"
+  },
+  "updated_at": {
+    "$date": "2025-11-18T17:35:29.932Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "691caebe1b9511da716ac81e"
+  },
+  "username": "Trabajador2",
+  "email": "trabajador2@gamil.com",
+  "password": "$2b$10$YyETXLPY1FUw9ocmsPn/cu/fDLOFViy2nQPhPN8t9Fk34PmlhNro2",
+  "role": "Trabajador",
+  "is_active": false,
+  "is_available": true,
+  "profile": {
+    "first_name": "Trabajador",
+    "last_name": "Dos",
+    "phone": "3704200001",
+    "age": 30,
+    "address": "Av. Trabajador 2",
+    "sex": "Hombre",
+    "dni": "20000001"
+  },
+  "profile_picture": null,
+  "deleted_at": null,
+  "password_reset_token": null,
+  "password_reset_expires": null,
+  "created_at": {
+    "$date": "2025-11-18T17:37:02.368Z"
+  },
+  "updated_at": {
+    "$date": "2025-11-18T17:37:02.368Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "691caf041b9511da716ac820"
+  },
+  "username": "Operador1",
+  "email": "operador1@gmail.com",
+  "password": "$2b$10$dET8EzwYmTAN3YqrDJzhF.seE/WA7dAoNSDUpxRlYu706Q0HOsXgi",
+  "role": "Operador",
+  "is_active": false,
+  "is_available": true,
+  "profile": {
+    "first_name": "Operador",
+    "last_name": "Uno",
+    "phone": "3704100000",
+    "age": 30,
+    "address": "Av. Operador 1",
+    "sex": "Mujer",
+    "dni": "10000000"
+  },
+  "profile_picture": null,
+  "deleted_at": null,
+  "password_reset_token": null,
+  "password_reset_expires": null,
+  "created_at": {
+    "$date": "2025-11-18T17:38:12.545Z"
+  },
+  "updated_at": {
+    "$date": "2025-11-18T17:38:12.545Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "691caf4f1b9511da716ac822"
+  },
+  "username": "Operador2",
+  "email": "operador@gmail.com",
+  "password": "$2b$10$q3RakCiytRPSPpQY8W/nEOqxqE/HTWrIAjBVON31BI6aPBURhZx1m",
+  "role": "Operador",
+  "is_active": false,
+  "is_available": true,
+  "profile": {
+    "first_name": "Operador",
+    "last_name": "Dos",
+    "phone": "3704100001",
+    "age": 30,
+    "address": "Av. Operador 2",
+    "sex": "Hombre",
+    "dni": "10000001"
+  },
+  "profile_picture": null,
+  "deleted_at": null,
+  "password_reset_token": null,
+  "password_reset_expires": null,
+  "created_at": {
+    "$date": "2025-11-18T17:39:27.866Z"
+  },
+  "updated_at": {
+    "$date": "2025-11-18T17:39:27.866Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "691cbea109cf5e0cbe5f77ed"
+  },
+  "username": "Trabajador3",
+  "email": "trabajador3@gmail.com",
+  "password": "$2b$10$4JH0UzjAVCTY/7s3MpPokOWnPVVmFyllQ1TYbDUmPxON/CuifStRO",
+  "role": "Trabajador",
+  "is_active": false,
+  "is_available": true,
+  "profile": {
+    "first_name": "Trabajador",
+    "last_name": "Tres",
+    "phone": "3704200002",
+    "age": 30,
+    "address": "Av. Trabajador 3",
+    "sex": "Hombre",
+    "dni": "20000002"
+  },
+  "profile_picture": null,
+  "deleted_at": null,
+  "password_reset_token": null,
+  "password_reset_expires": null,
+  "created_at": {
+    "$date": "2025-11-18T18:44:49.499Z"
+  },
+  "updated_at": {
+    "$date": "2025-11-18T18:44:49.499Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "691cbee009cf5e0cbe5f77ef"
+  },
+  "username": "Trabajador4",
+  "email": "trabajador4@gmail.com",
+  "password": "$2b$10$hYMDavQrl4d2/Kqlrh.LnOpUVxOUhhLBP0l9vmcHVkLTvKcV4LSGi",
+  "role": "Trabajador",
+  "is_active": false,
+  "is_available": true,
+  "profile": {
+    "first_name": "Trabajador",
+    "last_name": "Cuatro",
+    "phone": "3704200003",
+    "age": 30,
+    "address": "Av. Trabajador 4",
+    "sex": "Mujer",
+    "dni": "20000003"
+  },
+  "profile_picture": null,
+  "deleted_at": null,
+  "password_reset_token": null,
+  "password_reset_expires": null,
+  "created_at": {
+    "$date": "2025-11-18T18:45:52.560Z"
+  },
+  "updated_at": {
+    "$date": "2025-11-18T18:45:52.560Z"
+  }
+}]

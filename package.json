@@ -1,0 +1,34 @@
+{
+  "name": "munifor-back",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000m\u0000u\u0000n\u0000i\u0000f\u0000o\u0000r\u0000-\u0000b\u0000a\u0000c\u0000k\u0000\r\u0000 \u0000",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch app.js",
+    "seed": "node script/generate-demo-data.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoseFR2001/munifor-back.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoseFR2001/munifor-back/issues"
+  },
+  "homepage": "https://github.com/JoseFR2001/munifor-back#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-validator": "^7.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.3",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "node-cron": "^4.2.1"
+  }
+}
