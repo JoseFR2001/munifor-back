@@ -1,37 +1,60 @@
+//* ============================================
+//* CONTROLADOR DE DASHBOARDS (TABLEROS)
+//* ============================================
+//? Este controlador proporciona estadísticas específicas para cada rol de usuario
+//? Cada función retorna conteos (countDocuments) de diferentes entidades según el rol
+
+//! IMPORTS DE MODELOS
 import CrewModel from "../models/crew.model.js";
 import ReportModel from "../models/report.model.js";
 import TaskModel from "../models/task.model.js";
 import UserModel from "../models/user.model.js";
 
+//* ============================================
+//* DASHBOARD PARA CIUDADANOS
+//* ============================================
+
+/**
+ * Dashboard del Ciudadano
+ * @description Muestra estadísticas de los reportes creados por el ciudadano
+ * @route GET /api/dashboard/citizens
+ * @access Ciudadanos autenticados
+ */
 export const getDashboardCitizen = async (req, res) => {
-  const authorId = req.user._id;
+  const authorId = req.user._id; //? ID del ciudadano logueado
+
   try {
-    // Conteo de reportes completados
+    //? Conteo de reportes completados del ciudadano
     const completedCount = await ReportModel.countDocuments({
       author: authorId,
       status: "Completado",
     });
-    // Conteo de reportes aceptados
+
+    //? Conteo de reportes aceptados del ciudadano
     const acceptedCount = await ReportModel.countDocuments({
       author: authorId,
       status: "Aceptado",
     });
-    // Conteo de reportes pendientes
+
+    //? Conteo de reportes pendientes del ciudadano
     const pendingCount = await ReportModel.countDocuments({
       author: authorId,
       status: "Pendiente",
     });
-    // Conteo de reportes revisados (en seguimiento)
+
+    //? Conteo de reportes en revisión del ciudadano
     const reviewedCount = await ReportModel.countDocuments({
       author: authorId,
       status: "Revisado",
     });
 
+    //? Conteo de reportes rechazados del ciudadano
     const rejectedCount = await ReportModel.countDocuments({
       author: authorId,
       status: "Rechazado",
     });
-    // Conteo total de reportes
+
+    //? Conteo total de reportes del ciudadano
     const totalCount = await ReportModel.countDocuments({ author: authorId });
 
     return res.json({
@@ -53,17 +76,28 @@ export const getDashboardCitizen = async (req, res) => {
   }
 };
 
+//* ============================================
+//* DASHBOARD PARA TRABAJADORES
+//* ============================================
+
+/**
+ * Dashboard del Trabajador
+ * @description Muestra estadísticas de tareas de la cuadrilla del trabajador
+ * @route GET /api/dashboard/workers
+ * @access Trabajadores autenticados
+ */
 export const getDashboardWorker = async (req, res) => {
-  const workerId = req.user._id;
+  const workerId = req.user._id; //? ID del trabajador logueado
 
   try {
-    // Primero encontrar el crew del worker
+    //? Buscar la cuadrilla del trabajador
+    // Usa $or para buscar si es miembro O líder
     const crew = await CrewModel.findOne({
       $or: [{ members: workerId }, { leader: workerId }],
-      deleted_at: null,
+      deleted_at: null, //? Solo cuadrillas activas
     });
 
-    // Si no está en ningún crew, retornar todo en 0
+    //! Si el trabajador no pertenece a ninguna cuadrilla, retornar todo en 0
     if (!crew) {
       return res.json({
         ok: true,
@@ -76,22 +110,25 @@ export const getDashboardWorker = async (req, res) => {
       });
     }
 
-    // Contar tareas del crew
+    //? Contar tareas pendientes de la cuadrilla
     const pendingCount = await TaskModel.countDocuments({
       crew: crew._id,
       status: "Pendiente",
     });
 
+    //? Contar tareas en progreso de la cuadrilla
     const inProgressCount = await TaskModel.countDocuments({
       crew: crew._id,
       status: "En Progreso",
     });
 
+    //? Contar tareas completadas de la cuadrilla
     const completedCount = await TaskModel.countDocuments({
       crew: crew._id,
       status: "Finalizada",
     });
 
+    //? Contar total de tareas de la cuadrilla
     const totalCount = await TaskModel.countDocuments({
       crew: crew._id,
     });
@@ -113,39 +150,51 @@ export const getDashboardWorker = async (req, res) => {
   }
 };
 
+//* ============================================
+//* DASHBOARD PARA OPERADORES
+//* ============================================
+
+/**
+ * Dashboard del Operador
+ * @description Muestra estadísticas de reportes y tareas del operador
+ * @route GET /api/dashboard/operators
+ * @access Operadores autenticados
+ */
 export const getOperatorDashboard = async (req, res) => {
-  const operatorId = req.user._id;
+  const operatorId = req.user._id; //? ID del operador logueado
 
   try {
-    // Total de nuevos reportes (pendientes)
+    //? Total de reportes nuevos (pendientes de asignar)
+    // Los reportes "Pendiente" aún no tienen assigned_operator
     const totalNewReports = await ReportModel.countDocuments({
       status: "Pendiente",
     });
 
-    // En proceso (asignados al operador y en estado Aceptado)
+    //? Reportes en proceso (asignados al operador y aceptados)
     const inProcessCount = await ReportModel.countDocuments({
       assigned_operator: operatorId,
       status: "Aceptado",
     });
 
-    // Completados (asignados al operador y en estado Completado)
+    //? Reportes completados por el operador
     const completedCount = await ReportModel.countDocuments({
       assigned_operator: operatorId,
       status: "Completado",
     });
 
-    // Rechazados (asignados al operador y en estado Rechazado)
+    //? Reportes rechazados por el operador
     const rejectedCount = await ReportModel.countDocuments({
       assigned_operator: operatorId,
       status: "Rechazado",
     });
 
-    // Cuadrillas activas (no eliminadas)
+    //? Total de cuadrillas activas (no eliminadas)
+    // Para asignar a las tareas
     const activeCrewsCount = await CrewModel.countDocuments({
       deleted_at: null,
     });
 
-    // Tareas asignadas (tareas asignadas a cuadrillas activas)
+    //? Tareas asignadas en progreso del operador
     const assignedTasksCount = await TaskModel.countDocuments({
       status: "En Progreso",
       assigned_operator: operatorId,
@@ -170,41 +219,56 @@ export const getOperatorDashboard = async (req, res) => {
   }
 };
 
+//* ============================================
+//* DASHBOARD PARA ADMINISTRADORES
+//* ============================================
+
+/**
+ * Dashboard del Administrador
+ * @description Muestra estadísticas generales del sistema
+ * @route GET /api/dashboard/admin
+ * @access Administradores autenticados
+ */
 export const getAdminDashboard = async (req, res) => {
   try {
-    // Total de usuarios
+    //? Total de usuarios activos (no eliminados)
     const totalUsers = await UserModel.countDocuments({ deleted_at: null });
 
-    // Total de reportes
+    //? Total de reportes en el sistema
     const totalReports = await ReportModel.countDocuments({});
 
-    // Nuevos reportes (pendientes)
+    //? Reportes nuevos (pendientes de asignar)
     const newReports = await ReportModel.countDocuments({
       status: "Pendiente",
     });
 
-    // Reportes completados
+    //? Reportes completados en el sistema
     const completedReports = await ReportModel.countDocuments({
       status: "Completado",
     });
 
-    // Trabajadores activos
+    //? Total de trabajadores activos
     const activeWorkers = await UserModel.countDocuments({
       role: "Trabajador",
       deleted_at: null,
     });
 
-    // Operadores activos
+    //? Total de operadores activos
     const activeOperators = await UserModel.countDocuments({
       role: "Operador",
       deleted_at: null,
     });
 
+    //? Total de tareas en el sistema
     const totalTasks = await TaskModel.countDocuments({});
+
+    //? Total de tareas completadas
     const totalCompletedTasks = await TaskModel.countDocuments({
       status: "Finalizada",
     });
-    // Tasa de eficiencia
+
+    //? Cálculo de tasa de eficiencia (% de tareas completadas)
+    // Formula: (tareas completadas / total de tareas) * 100
     const efficiencyRate =
       totalTasks > 0 ? Math.round((totalCompletedTasks / totalTasks) * 100) : 0;
 
@@ -227,3 +291,28 @@ export const getAdminDashboard = async (req, res) => {
     });
   }
 };
+
+//* ============================================
+//* TRADUCCIÓN DE CONSTANTES
+//* ============================================
+// getDashboardCitizen = obtener dashboard de ciudadano
+// getDashboardWorker = obtener dashboard de trabajador
+// getOperatorDashboard = obtener dashboard de operador
+// getAdminDashboard = obtener dashboard de administrador
+// authorId = ID del autor (ciudadano)
+// workerId = ID del trabajador
+// operatorId = ID del operador
+// countDocuments = contar documentos (operación de MongoDB)
+// completedCount = conteo de completados
+// acceptedCount = conteo de aceptados
+// pendingCount = conteo de pendientes
+// reviewedCount = conteo de revisados
+// rejectedCount = conteo de rechazados
+// totalCount = conteo total
+// inProgressCount = conteo en progreso
+// totalNewReports = total de reportes nuevos
+// activeCrewsCount = conteo de cuadrillas activas
+// assignedTasksCount = conteo de tareas asignadas
+// efficiencyRate = tasa de eficiencia
+// deleted_at = fecha de eliminación (soft delete)
+// $or = operador OR de MongoDB (busca si cumple una u otra condición)
